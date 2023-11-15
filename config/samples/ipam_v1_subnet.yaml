@@ -10,3 +10,12 @@ metadata:
   name: subnet-sample
 spec:
   # TODO(user): Add fields here
+  name: EgressIP
+  address: 192.168.0.0
+  mask: 255.255.255.0
+  usableIp:
+    - 192.168.0.10-192.168.0.63
+    - 192.168.0.128/26
+  reservedIp:
+    - ipAddress: 192.168.0.1
+      name: DefaultGateway

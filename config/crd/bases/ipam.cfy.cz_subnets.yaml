@@ -53,7 +53,13 @@ spec:
                       type: string
                     name:
                       type: string
+                  required:
+                  - ipAddress
                   type: object
+                type: array
+              usableIp:
+                items:
+                  type: string
                 type: array
             required:
             - address

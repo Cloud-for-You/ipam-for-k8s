@@ -32,14 +32,15 @@ type SubnetSpec struct {
 	Name string `json:"name"`
 	Address string `json:"address"`
 	Mask string `json:"mask"`
-	ReservedIp []ReservedDevices `json:"reservedIp,omitempty"`
+	UsableIp []string `json:"usableIp,omitempty"`
+	ReservedIp []ReservedIp `json:"reservedIp,omitempty"`
 	Owner string `json:"owner,omitempty"`
 	Notes string `json:"notes,omitempty"`
 }
 
-type ReservedDevices struct {
+type ReservedIp struct {
 	Name string `json:"name,omitempty"`	
-	IpAddress string `json:"ipAddress,omitempty"`
+	IpAddress string `json:"ipAddress"`
 }
 
 // SubnetStatus defines the observed state of Subnet
