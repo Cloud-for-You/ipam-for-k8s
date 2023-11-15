@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- ipam_v1_subnet.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

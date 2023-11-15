@@ -1,0 +1,12 @@
+apiVersion: ipam.cfy.cz/v1
+kind: Subnet
+metadata:
+  labels:
+    app.kubernetes.io/name: subnet
+    app.kubernetes.io/instance: subnet-sample
+    app.kubernetes.io/part-of: ipam-for-k8s
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: ipam-for-k8s
+  name: subnet-sample
+spec:
+  # TODO(user): Add fields here
