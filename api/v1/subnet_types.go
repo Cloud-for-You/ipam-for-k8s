@@ -38,9 +38,12 @@ type SubnetSpec struct {
 	Notes      string       `json:"notes,omitempty"`
 }
 
+// +kubebuilder:validation:Pattern:=`^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$`
+type IPAddress string
+
 type ReservedIp struct {
-	Name      string `json:"name,omitempty"`
-	IpAddress string `json:"ipAddress"`
+	Name      string    `json:"name,omitempty"`
+	IpAddress IPAddress `json:"ipAddress"`
 }
 
 // SubnetStatus defines the observed state of Subnet

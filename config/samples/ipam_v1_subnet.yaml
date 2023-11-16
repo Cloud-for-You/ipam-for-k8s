@@ -17,5 +17,5 @@ spec:
     - 192.168.0.10-192.168.0.63
     - 192.168.0.128/26
   reservedIp:
-    - ipAddress: 192.168.0.1
+    - ipAddress: 192.168.0.256
       name: DefaultGateway
