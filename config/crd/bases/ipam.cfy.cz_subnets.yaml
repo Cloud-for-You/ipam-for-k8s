@@ -70,7 +70,6 @@ spec:
             description: SubnetStatus defines the observed state of Subnet
             properties:
               freeAddresses:
-                format: int32
                 type: integer
               totalAddresses:
                 description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
@@ -78,8 +77,11 @@ spec:
                   this file'
                 type: integer
               usedAddresses:
-                format: int32
                 type: integer
+            required:
+            - freeAddresses
+            - totalAddresses
+            - usedAddresses
             type: object
         type: object
     served: true

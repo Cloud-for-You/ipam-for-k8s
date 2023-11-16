@@ -34,6 +34,7 @@ import (
 
 	ipamv1 "github.com/Cloud-for-You/ipam-for-k8s/api/v1"
 	"github.com/Cloud-for-You/ipam-for-k8s/internal/controller"
+	apiserver "github.com/Cloud-for-You/ipam-for-k8s/pkg/api_server"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -65,6 +66,9 @@ func main() {
 	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	// Run API Server for external access
+	go apiserver.StartServer()
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,

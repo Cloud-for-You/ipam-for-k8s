@@ -18,13 +18,20 @@ package controller
 
 import (
 	"context"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	ipamv1 "github.com/Cloud-for-You/ipam-for-k8s/api/v1"
+	"github.com/Cloud-for-You/ipam-for-k8s/pkg/ipam"
+)
+
+const (
+	subnetFinalizer string = "ipam.cfy.cz/finalizer"
 )
 
 // SubnetReconciler reconciles a Subnet object
@@ -50,8 +57,76 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
+	log := log.FromContext(ctx)
+	log.Info("Verify if a CRD of Subnet exists")
+
+	// Fetch the Subnet instance
+	subnet := &ipamv1.Subnet{}
+	if err := r.Get(ctx, req.NamespacedName, subnet); err != nil {
+		log.Error(err, "unable to fetch Subnet")
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+
+	if subnet.ObjectMeta.DeletionTimestamp.IsZero() {
+		if !controllerutil.ContainsFinalizer(subnet, subnetFinalizer) {
+			controllerutil.AddFinalizer(subnet, subnetFinalizer)
+			if err := r.Update(ctx, subnet); err != nil {
+				return ctrl.Result{}, err
+			}
+			return ctrl.Result{}, nil
+		}
+	} else {
+		if controllerutil.ContainsFinalizer(subnet, subnetFinalizer) {
+			if err := r.finalizeSubnet(subnet); err != nil {
+				return ctrl.Result{}, err
+			}
+			controllerutil.RemoveFinalizer(subnet, subnetFinalizer)
+			if err := r.Update(ctx, subnet); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+		return ctrl.Result{}, nil
+	}
+
+	// Nase logika kodu
+	totalCount := 0
+	usedCount := 0
+
+	for _, ipRange := range subnet.Spec.UsableIp {
+		count, err := ipam.CountIPsInRange(ipRange)
+		if err != nil {
+			fmt.Printf("Error processing IP range %s: %v\n", ipRange, err)
+			continue
+		}
+		fmt.Printf("IP range %s has %d addresses\n", ipRange, count)
+		totalCount += count
+	}
+
+	// Update the status of the Subnet instance
+	if err := r.updateStatus(subnet, int(totalCount), int(usedCount)); err != nil {
+		log.Error(err, "unable to update Subnet status")
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
+}
+
+func (r *SubnetReconciler) updateStatus(subnet *ipamv1.Subnet, totalAddress int, usedAddress int) error {
+	subnet.Status.TotalAddresses = totalAddress
+	subnet.Status.UsedAddresses = usedAddress
+	subnet.Status.FreeAddresses = totalAddress - usedAddress
+
+	// Save the updated status
+	if err := r.Status().Update(context.Background(), subnet); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *SubnetReconciler) finalizeSubnet(m *ipamv1.Subnet) error {
+	log.Log.Info("Successfuly finalize subnet")
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

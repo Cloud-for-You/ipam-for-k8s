@@ -29,17 +29,17 @@ type SubnetSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of Subnet. Edit subnet_types.go to remove/update
-	Name string `json:"name"`
-	Address string `json:"address"`
-	Mask string `json:"mask"`
-	UsableIp []string `json:"usableIp,omitempty"`
+	Name       string       `json:"name"`
+	Address    string       `json:"address"`
+	Mask       string       `json:"mask"`
+	UsableIp   []string     `json:"usableIp,omitempty"`
 	ReservedIp []ReservedIp `json:"reservedIp,omitempty"`
-	Owner string `json:"owner,omitempty"`
-	Notes string `json:"notes,omitempty"`
+	Owner      string       `json:"owner,omitempty"`
+	Notes      string       `json:"notes,omitempty"`
 }
 
 type ReservedIp struct {
-	Name string `json:"name,omitempty"`	
+	Name      string `json:"name,omitempty"`
 	IpAddress string `json:"ipAddress"`
 }
 
@@ -47,9 +47,9 @@ type ReservedIp struct {
 type SubnetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	TotalAddresses int `json:"totalAddresses,omitempty"`
-	UsedAddresses uint32 `json:"usedAddresses,omitempty"`
-	FreeAddresses uint32 `json:"freeAddresses,omitempty"`
+	TotalAddresses int `json:"totalAddresses"`
+	UsedAddresses  int `json:"usedAddresses"`
+	FreeAddresses  int `json:"freeAddresses"`
 }
 
 //+kubebuilder:object:root=true
