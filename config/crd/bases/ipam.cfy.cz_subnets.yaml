@@ -36,6 +36,16 @@ spec:
             properties:
               address:
                 type: string
+              manageKind:
+                properties:
+                  apiVersion:
+                    type: string
+                  kind:
+                    type: string
+                required:
+                - apiVersion
+                - kind
+                type: object
               mask:
                 type: string
               name:
@@ -46,7 +56,7 @@ spec:
                 type: string
               owner:
                 type: string
-              reservedIp:
+              reservedIPs:
                 items:
                   properties:
                     ipAddress:
@@ -58,12 +68,13 @@ spec:
                   - ipAddress
                   type: object
                 type: array
-              usableIp:
+              usableIPs:
                 items:
                   type: string
                 type: array
             required:
             - address
+            - manageKind
             - mask
             - name
             type: object
@@ -71,6 +82,8 @@ spec:
             description: SubnetStatus defines the observed state of Subnet
             properties:
               freeAddresses:
+                type: integer
+              reservedAddresses:
                 type: integer
               totalAddresses:
                 description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
@@ -81,6 +94,7 @@ spec:
                 type: integer
             required:
             - freeAddresses
+            - reservedAddresses
             - totalAddresses
             - usedAddresses
             type: object

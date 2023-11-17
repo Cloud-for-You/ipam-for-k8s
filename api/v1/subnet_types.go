@@ -29,19 +29,25 @@ type SubnetSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of Subnet. Edit subnet_types.go to remove/update
-	Name       string       `json:"name"`
-	Address    string       `json:"address"`
-	Mask       string       `json:"mask"`
-	UsableIp   []string     `json:"usableIp,omitempty"`
-	ReservedIp []ReservedIp `json:"reservedIp,omitempty"`
-	Owner      string       `json:"owner,omitempty"`
-	Notes      string       `json:"notes,omitempty"`
+	Name        string       `json:"name"`
+	Address     string       `json:"address"`
+	Mask        string       `json:"mask"`
+	UsableIPs   []string     `json:"usableIPs,omitempty"`
+	ReservedIPs []ReservedIP `json:"reservedIPs,omitempty"`
+	Owner       string       `json:"owner,omitempty"`
+	Notes       string       `json:"notes,omitempty"`
+	ManageKind  ManageKind   `json:"manageKind"`
+}
+
+type ManageKind struct {
+	ApiVersion string `json:"apiVersion"`
+	Kind       string `json:"kind"`
 }
 
 // +kubebuilder:validation:Pattern:=`^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$`
 type IPAddress string
 
-type ReservedIp struct {
+type ReservedIP struct {
 	Name      string    `json:"name,omitempty"`
 	IpAddress IPAddress `json:"ipAddress"`
 }
@@ -50,9 +56,10 @@ type ReservedIp struct {
 type SubnetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	TotalAddresses int `json:"totalAddresses"`
-	UsedAddresses  int `json:"usedAddresses"`
-	FreeAddresses  int `json:"freeAddresses"`
+	TotalAddresses     int `json:"totalAddresses"`
+	UsedAddresses      int `json:"usedAddresses"`
+	FreeAddresses      int `json:"freeAddresses"`
+	ReserverdAddresses int `json:"reservedAddresses"`
 }
 
 //+kubebuilder:object:root=true

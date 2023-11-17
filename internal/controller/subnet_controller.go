@@ -91,9 +91,10 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	// Nase logika kodu
 	totalCount := 0
 	usedCount := 0
+	reservedCount := 10
 
-	for _, ipRange := range subnet.Spec.UsableIp {
-		count, err := pkgSubnet.CountIPsInRange(ipRange)
+	for _, ipRange := range subnet.Spec.UsableIPs {
+		count, err := pkgSubnet.GetUsedIPsInSubnet(ipRange)
 		if err != nil {
 			fmt.Printf("Error processing IP range %s: %v\n", ipRange, err)
 			continue
@@ -103,7 +104,7 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	}
 
 	// Update the status of the Subnet instance
-	if err := r.updateStatus(subnet, int(totalCount), int(usedCount)); err != nil {
+	if err := r.updateStatus(subnet, int(totalCount), int(usedCount), int(reservedCount)); err != nil {
 		log.Error(err, "unable to update Subnet status")
 		return ctrl.Result{}, err
 	}
@@ -111,10 +112,11 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	return ctrl.Result{}, nil
 }
 
-func (r *SubnetReconciler) updateStatus(subnet *ipamv1.Subnet, totalAddress int, usedAddress int) error {
+func (r *SubnetReconciler) updateStatus(subnet *ipamv1.Subnet, totalAddress int, usedAddress int, reservedAddress int) error {
 	subnet.Status.TotalAddresses = totalAddress
 	subnet.Status.UsedAddresses = usedAddress
-	subnet.Status.FreeAddresses = totalAddress - usedAddress
+	subnet.Status.ReserverdAddresses = reservedAddress
+	subnet.Status.FreeAddresses = totalAddress - usedAddress - reservedAddress
 
 	// Save the updated status
 	if err := r.Status().Update(context.Background(), subnet); err != nil {

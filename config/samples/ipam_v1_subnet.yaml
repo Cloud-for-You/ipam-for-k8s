@@ -9,13 +9,15 @@ metadata:
     app.kubernetes.io/created-by: ipam-for-k8s
   name: subnet-sample
 spec:
-  # TODO(user): Add fields here
   name: EgressIP
   address: 192.168.0.0
   mask: 255.255.255.0
-  usableIp:
+  manageKind:
+    apiVersion: v1
+    kind: EgressIPs
+  usableIPs:
     - 192.168.0.10-192.168.0.63
     - 192.168.0.128/26
-  reservedIp:
-    - ipAddress: 192.168.0.256
+  reservedIPs:
+    - ipAddress: 192.168.0.1
       name: DefaultGateway
