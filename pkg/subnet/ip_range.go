@@ -1,4 +1,4 @@
-package ipam
+package subnet
 
 import (
 	"fmt"
@@ -46,3 +46,4 @@ func ipToInt(ip net.IP) int {
 	ip = ip.To4()
 	return int(ip[0])<<24 | int(ip[1])<<16 | int(ip[2])<<8 | int(ip[3])
 }
+

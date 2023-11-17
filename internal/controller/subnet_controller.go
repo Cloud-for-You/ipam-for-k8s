@@ -27,7 +27,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	ipamv1 "github.com/Cloud-for-You/ipam-for-k8s/api/v1"
-	"github.com/Cloud-for-You/ipam-for-k8s/pkg/ipam"
+	pkgSubnet "github.com/Cloud-for-You/ipam-for-k8s/pkg/subnet"
 )
 
 const (
@@ -93,7 +93,7 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	usedCount := 0
 
 	for _, ipRange := range subnet.Spec.UsableIp {
-		count, err := ipam.CountIPsInRange(ipRange)
+		count, err := pkgSubnet.CountIPsInRange(ipRange)
 		if err != nil {
 			fmt.Printf("Error processing IP range %s: %v\n", ipRange, err)
 			continue
