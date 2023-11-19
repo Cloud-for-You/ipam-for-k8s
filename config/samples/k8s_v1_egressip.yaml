@@ -1,0 +1,13 @@
+apiVersion: k8s.ovn.org/v1
+kind: EgressIP
+metadata:
+  name: sample-192.168.0.20
+spec:
+  egressIPs:
+  - 192.168.0.20
+  podSelector: {}
+  namespaceSelector: {}
+status:
+  items:
+  - egressIP: 192.168.0.20
+    node: k3d-local-server-0
