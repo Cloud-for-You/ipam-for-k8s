@@ -91,8 +91,28 @@ func init() {
 	SchemeBuilder.Register(&Subnet{}, &SubnetList{})
 }
 
-// GetUsedIPsInSubnet spočítá počet dostupných IP adres v daném rozsahu
-func GetUsedIPsInSubnet(ipRange string) (int, error) {
+// GetUsedIPsInSubnet Calculate the number of all usable IP addresses defined in the Kubernetes CR.
+func GetUsedIPsInSubnet(m Subnet) (int, error) {
+	totalCount := 0
+	for _, ipRange := range m.Spec.UsableIPs {
+		count, err := getCountIPsInSubnet(ipRange)
+		if err != nil {
+			fmt.Printf("Error processing IP range %s: %v\n", ipRange, err)
+			continue
+		}
+		fmt.Printf("IP range %s has %d addresses\n", ipRange, count)
+		totalCount += count
+	}
+	return totalCount, nil
+}
+
+// GetReservedIPsInSubnet Calculate the number of all reserved IP addresses defined in the Kubernetes CR.
+func GetReservedIPsInSubnet(m Subnet) (int, error) {
+	reservedCount := len(m.Spec.ReservedIPs)
+	return reservedCount, nil
+}
+
+func getCountIPsInSubnet(ipRange string) (int, error) {
 	parts := strings.Split(ipRange, "-")
 
 	if len(parts) == 1 {
