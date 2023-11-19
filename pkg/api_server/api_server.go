@@ -1,16 +1,14 @@
 package apiserver
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/Cloud-for-You/ipam-for-k8s/pkg/api_server/handlers"
 )
 
 func StartServer() {
-	handler := func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Hello world")
-	}
 	// Create handler for functions
-	http.HandleFunc("/api/", handler)
+	http.HandleFunc("/api/", handlers.HelloWorld)
 
 	http.ListenAndServe(":10080", nil)
 }
