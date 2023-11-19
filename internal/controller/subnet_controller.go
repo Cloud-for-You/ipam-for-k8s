@@ -18,7 +18,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -88,19 +87,9 @@ func (r *SubnetReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	}
 
 	// Nase logika kodu
-	totalCount := 0
+	totalCount, _ := ipamv1.GetUsedIPsInSubnet(*subnet)
+	reservedCount, _ := ipamv1.GetReservedIPsInSubnet(*subnet)
 	usedCount := 0
-	reservedCount := 10
-
-	for _, ipRange := range subnet.Spec.UsableIPs {
-		count, err := ipamv1.GetUsedIPsInSubnet(ipRange)
-		if err != nil {
-			fmt.Printf("Error processing IP range %s: %v\n", ipRange, err)
-			continue
-		}
-		fmt.Printf("IP range %s has %d addresses\n", ipRange, count)
-		totalCount += count
-	}
 
 	// Update the status of the Subnet instance
 	if err := r.updateStatus(subnet, int(totalCount), int(usedCount), int(reservedCount)); err != nil {
