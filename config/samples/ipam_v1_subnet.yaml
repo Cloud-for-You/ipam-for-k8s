@@ -13,8 +13,8 @@ spec:
   address: 192.168.0.0
   mask: 255.255.255.0
   manageKind:
-    apiVersion: v1
-    kind: EgressIPs
+    apiVersion: k8s.ovn.org/v1
+    kind: EgressIP
   usableIPs:
     - 192.168.0.10-192.168.0.63
     - 192.168.0.128/26
